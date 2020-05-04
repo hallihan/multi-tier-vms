@@ -109,7 +109,7 @@
             },
             "SL12": {
                 "publisher": "suse",
-                "offer": "sles-12-sp5-byos",
+                "offer": "sles-12-sp5-basic",
                 "sku": "gen1",
                 "version": "latest"
             }
