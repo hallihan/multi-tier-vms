@@ -382,6 +382,9 @@
             "apiVersion": "2019-12-01",
             "name": "[concat(parameters('Virtual Network Name'),'-ip')]",
             "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+            ],
             "sku": {
                 "name": "Standard"
             },
