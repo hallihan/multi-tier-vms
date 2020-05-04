@@ -1,0 +1,238 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Mid-Tier VM Name Base": {
+            "defaultValue": "midtier",
+            "type": "String"
+        },
+        "Mid-Tier VM Count": {
+            "defaultValue": "midtier",
+            "type": "Int"
+        },
+        "Mid-tier VM Size": {
+            "defaultValue": "Standard_D8s_v3",
+            "type": "String",
+            "allowedValues": [
+                "Standard_D8s_v3",
+                "Standard_D16s_v3",
+                "Standard_D32s_v3"
+            ]
+        },
+        "Metadata VM Name Base": {
+            "defaultValue": "midtier",
+            "type": "String"
+        },
+        "Metadata VM Count": {
+            "defaultValue": "midtier",
+            "type": "Int"
+        },
+        "Metadata VM Size": {
+            "defaultValue": "Standard_D8s_v3",
+            "type": "String",
+            "allowedValues": [
+                "Standard_D8s_v3",
+                "Standard_D16s_v3",
+                "Standard_D32s_v3"
+            ]
+        },
+        "Compute VM Name Base": {
+            "defaultValue": "midtier",
+            "type": "String"
+        },
+        "Compute VM Count": {
+            "defaultValue": "midtier",
+            "type": "Int"
+        },
+        "Compute VM Size": {
+            "defaultValue": "Standard_D8s_v3",
+            "type": "String",
+            "allowedValues": [
+                "Standard_D8s_v3",
+                "Standard_D16s_v3",
+                "Standard_D32s_v3"
+            ]
+        },
+        "Use Existing Virtual Network": {
+            "defaultValue": "False",
+            "type": "Bool"
+        },
+        "Virtual Network Name": {
+            "defaultValue": "SAS9xVNET",
+            "type": "String"
+        },
+        "Compute Network Security Group Name": {
+            "defaultValue": "computeNSG",
+            "type": "String"
+        },
+        "Mid-tier Network Security Group Name": {
+            "defaultValue": "midtierNSG",
+            "type": "String"
+        },
+        "Metadata Network Security Group Name": {
+            "defaultValue": "metadataNSG",
+            "type": "String"
+        },
+        "Proximity PlacementGroup Name": {
+            "defaultValue": "prox1",
+            "type": "String"
+        },
+        "ssh Key for VM Access" : {
+            "defaultValue": "",
+            "type": "String"
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-07-01",
+            "type": "Microsoft.Compute/proximityPlacementGroups",
+            "name": "[parameters('Proximity PlacementGroup Name')]",
+            "properties": {
+            },
+            "location": "[resourceGroup().location]"
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('Compute Network Security Group Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('Metadata Network Security Group Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('Mid-tier Network Security Group Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "[concat('ParameterizedVM-', copyIndex())]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'paramvm.json')]"
+                },
+                "parameters": {
+                    "location": "[resourceGroup().location]",
+                    "vm_name": "[concat('compute-', copyIndex())]",
+                    "vm_size": "[parameters('Compute VM Size')]",
+                    "datadisk_size": "128",
+                    "datadisk_count": "2",
+                    "ssh_pub_key": "[parameters('ssh Key for VM Access')]",
+                    "vnet_name": "[parameters('Virtual Network Name')]",
+                    "vnet_subnet_name": "computeSubnet",
+                    "proximity_group_name": "[parameters('Proximity PlacementGroup Name')]"
+                }
+            },
+            "copy": {
+                "name": "resourcecopy",
+                "count": 3
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-12-01",
+            "name": "[parameters('Virtual Network Name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Compute Network Security Group Name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Mid-tier Network Security Group Name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Metadata Network Security Group Name'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.2.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "GatewaySubnet",
+                        "properties": {
+                            "addressPrefix": "10.2.0.224/27",
+                            "serviceEndpoints": [
+                            ],
+                            "delegations": [
+                            ],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "metadataSubnet",
+                        "properties": {
+                            "addressPrefix": "10.2.0.16/28",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Metadata Network Security Group Name'))]"
+                            },
+                            "serviceEndpoints": [
+                            ],
+                            "delegations": [
+                            ],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "computeSubnet",
+                        "properties": {
+                            "addressPrefix": "10.2.1.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Compute Network Security Group Name'))]"
+                            },
+                            "serviceEndpoints": [
+                            ],
+                            "delegations": [
+                            ],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "midtierSubnet",
+                        "properties": {
+                            "addressPrefix": "10.2.0.0/28",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Mid-tier Network Security Group Name'))]"
+                            },
+                            "serviceEndpoints": [
+                            ],
+                            "delegations": [
+                            ],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [
+                ],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            }
+        }
+    ]
+}

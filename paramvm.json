@@ -1,0 +1,159 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "vm_name": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "vm_size": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "datadisk_size": {
+            "defaultValue": "",
+            "type": "Int"
+        },
+        "datadisk_count": {
+            "defaultValue": "0",
+            "type": "Int"
+        },
+        "ssh_pub_key": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "vnet_name": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "vnet_subnet_name": {
+            "defaultValue": "default",
+            "type": "String"
+        },
+        "proximity_group_name": {
+            "defaultValue": "",
+            "type": "String"
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('vm_name')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic'))]"
+            ],
+            "zones": [
+                "1"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vm_size')]"
+                },
+                "proximityPlacementGroup": {
+                    "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups',parameters('proximity_group_name'))]"
+                },
+
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "RedHat",
+                        "offer": "RHEL",
+                        "sku": "7-LVM",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('vm_name'), '_OsDisk')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('vm_name'), '_OsDisk'))]"
+                        },
+                        "diskSizeGB": 64
+                    },
+                    "copy": [
+                        {
+                            "name": "datadisks",
+                            "count": "[parameters('datadisk_count')]",
+                            "input": {
+                                "lun": "[copyIndex('datadisks')]",
+                                "managedDisk": {
+                                    "storageAccountType": "Premium_LRS",
+                                    "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('vm_name'), '_data_', copyIndex('datadisks')))]"
+                                },
+                                "diskSizeGB": "[parameters('datadisk_size')]",
+                                "caching": "None",
+                                "createOption": "Empty",
+                                "toBeDetached": false
+                            }
+                        }
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vm_name')]",
+                    "adminUsername": "AzureUser",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/AzureUser/.ssh/authorized_keys",
+                                    "keyData": "[parameters('ssh_pub_key')]"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [
+                    ],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('vm_name'), '_nic')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'), parameters('vnet_subnet_name'))]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [
+                    ]
+                },
+                "enableAcceleratedNetworking": true,
+                "enableIPForwarding": false
+            }
+        }
+    ]
+}
