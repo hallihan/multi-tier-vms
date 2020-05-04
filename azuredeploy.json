@@ -106,7 +106,7 @@
             "apiVersion": "2019-12-01",
             "name": "[parameters('Compute Network Security Group Name')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
             ],
             "location": "[resourceGroup().location]",
             "properties": {
@@ -119,7 +119,7 @@
             "apiVersion": "2019-12-01",
             "name": "[parameters('Metadata Network Security Group Name')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
             ],
             "location": "[resourceGroup().location]",
             "properties": {
@@ -132,7 +132,7 @@
             "apiVersion": "2019-12-01",
             "name": "[parameters('Mid-tier Network Security Group Name')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
             ],
             "location": "[resourceGroup().location]",
             "properties": {
@@ -146,7 +146,7 @@
             "name": "[concat('ParameterizedVM-', copyIndex())]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]",
-                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -179,7 +179,7 @@
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Compute Network Security Group Name'))]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Mid-tier Network Security Group Name'))]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Metadata Network Security Group Name'))]",
-                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
             ],
            "properties": {
                 "addressSpace": {
