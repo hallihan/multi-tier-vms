@@ -36,6 +36,10 @@
         "vnet_subnet_name": {
             "defaultValue": "default",
             "type": "String"
+        },
+        "proximity_group_name": {
+            "defaultValue": "",
+            "type": "String"
         }
     },
     "variables": {
