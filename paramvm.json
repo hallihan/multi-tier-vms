@@ -120,9 +120,6 @@
             "apiVersion": "2019-12-01",
             "name": "[concat(parameters('vm_name'), '_nic')]",
             "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'), parameters('vnet_subnet_name'))]"
-            ],
             "properties": {
                 "ipConfigurations": [
                     {
