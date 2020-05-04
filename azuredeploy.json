@@ -338,13 +338,13 @@
                     {
                         "name": "GatewaySubnet",
                         "properties": {
-                            "addressPrefix": "10.2.0.224/27",
-                            "serviceEndpoints": [
-                            ],
-                            "delegations": [
-                            ],
-                            "privateEndpointNetworkPolicies": "Enabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled"
+                            "addressPrefix": "10.2.0.224/27"
+                        }
+                    },
+                    {
+                        "name": "AzureBastionSubnet",
+                        "properties": {
+                            "addressPrefix": "10.2.0.192/27"
                         }
                     },
                     {
@@ -353,13 +353,7 @@
                             "addressPrefix": "10.2.0.16/28",
                             "networkSecurityGroup": {
                                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Metadata Network Security Group Name'))]"
-                            },
-                            "serviceEndpoints": [
-                            ],
-                            "delegations": [
-                            ],
-                            "privateEndpointNetworkPolicies": "Enabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled"
+                            }
                         }
                     },
                     {
@@ -368,13 +362,7 @@
                             "addressPrefix": "10.2.1.0/24",
                             "networkSecurityGroup": {
                                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Compute Network Security Group Name'))]"
-                            },
-                            "serviceEndpoints": [
-                            ],
-                            "delegations": [
-                            ],
-                            "privateEndpointNetworkPolicies": "Enabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled"
+                            }
                         }
                     },
                     {
@@ -383,13 +371,7 @@
                             "addressPrefix": "10.2.0.0/28",
                             "networkSecurityGroup": {
                                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Mid-tier Network Security Group Name'))]"
-                            },
-                            "serviceEndpoints": [
-                            ],
-                            "delegations": [
-                            ],
-                            "privateEndpointNetworkPolicies": "Enabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled"
+                            }
                         }
                     }
                 ]
