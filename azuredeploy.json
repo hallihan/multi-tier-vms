@@ -152,7 +152,7 @@
             },
             "copy": {
                 "name": "resourcecopy",
-                "count": 3
+                "count": "[parameters('Compute VM Count')]"
             }
         },
         {

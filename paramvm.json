@@ -46,7 +46,7 @@
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-07-01",
             "name": "[parameters('vm_name')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic'))]"
             ],
@@ -130,7 +130,7 @@
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-12-01",
             "name": "[concat(parameters('vm_name'), '_nic')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
             ],
             "properties": {
