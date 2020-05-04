@@ -154,14 +154,15 @@
                     "uri": "[uri(deployment().properties.templateLink.uri, 'paramvm.json')]"
                 },
                 "parameters": {
-                    "vm_name": "[concat('compute-', copyIndex())]",
-                    "vm_size": "[parameters('Compute VM Size')]",
-                    "datadisk_size": "128",
-                    "datadisk_count": "2",
-                    "ssh_pub_key": "[parameters('ssh Key for VM Access')]",
-                    "vnet_name": "[parameters('Virtual Network Name')]",
-                    "vnet_subnet_name": "computeSubnet",
-                    "proximity_group_name": "[parameters('Proximity PlacementGroup Name')]"
+                    "location": {"value":"[resourceGroup().location]"},
+                    "vm_name": {"value":"[concat('compute-', copyIndex())]"},
+                    "vm_size":  {"value":"[parameters('Compute VM Size')]"},
+                    "datadisk_size":  {"value":128},
+                    "datadisk_count":  {"value":2},
+                    "ssh_pub_key":  {"value":"[parameters('ssh Key for VM Access')]"},
+                    "vnet_name":  {"value":"[parameters('Virtual Network Name')]"},
+                    "vnet_subnet_name":  {"value":"computeSubnet"},
+                    "proximity_group_name":  {"value":"[parameters('Proximity PlacementGroup Name')]"}
                 }
             },
             "copy": {
