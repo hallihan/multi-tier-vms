@@ -7,8 +7,9 @@
             "type": "String"
         },
         "Mid-Tier VM Count": {
-            "defaultValue": "midtier",
-            "type": "Int"
+            "defaultValue": 1,
+            "type": "Int",
+            "allowedValues": [1, 3]
         },
         "Mid-tier VM Size": {
             "defaultValue": "Standard_D8s_v3",
@@ -20,12 +21,13 @@
             ]
         },
         "Metadata VM Name Base": {
-            "defaultValue": "midtier",
+            "defaultValue": "metadata",
             "type": "String"
         },
         "Metadata VM Count": {
-            "defaultValue": "midtier",
-            "type": "Int"
+            "defaultValue": 1,
+            "type": "Int",
+            "allowedValues": [1, 3]
         },
         "Metadata VM Size": {
             "defaultValue": "Standard_D8s_v3",
@@ -37,11 +39,11 @@
             ]
         },
         "Compute VM Name Base": {
-            "defaultValue": "midtier",
+            "defaultValue": "compute",
             "type": "String"
         },
         "Compute VM Count": {
-            "defaultValue": "midtier",
+            "defaultValue": 1,
             "type": "Int"
         },
         "Compute VM Size": {
@@ -58,7 +60,7 @@
             "type": "Bool"
         },
         "Virtual Network Name": {
-            "defaultValue": "SAS9xVNET",
+            "defaultValue": "multitiervnet",
             "type": "String"
         },
         "Compute Network Security Group Name": {
