@@ -159,7 +159,7 @@
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2019-12-01",
             "name": "[parameters('Virtual Network Name')]",
-            "location": "eastus",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Compute Network Security Group Name'))]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Mid-tier Network Security Group Name'))]",
