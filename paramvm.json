@@ -77,8 +77,7 @@
                         "createOption": "FromImage",
                         "caching": "ReadWrite",
                         "managedDisk": {
-                            "storageAccountType": "Premium_LRS",
-                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('vm_name'), '_OsDisk'))]"
+                            "storageAccountType": "Premium_LRS"
                         },
                         "diskSizeGB": 64
                     },
