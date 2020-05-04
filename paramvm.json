@@ -87,14 +87,13 @@
                             "count": "[parameters('datadisk_count')]",
                             "input": {
                                 "lun": "[copyIndex('datadisks')]",
+                                "name": "[concat(parameters('vm_name'), '_data_', copyIndex('datadisks'))]",
                                 "managedDisk": {
-                                    "storageAccountType": "Premium_LRS",
-                                    "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('vm_name'), '_data_', copyIndex('datadisks')))]"
+                                    "storageAccountType": "Premium_LRS"
                                 },
                                 "diskSizeGB": "[parameters('datadisk_size')]",
                                 "caching": "None",
-                                "createOption": "Empty",
-                                "toBeDetached": false
+                                "createOption": "Empty"
                             }
                         }
                     ]
