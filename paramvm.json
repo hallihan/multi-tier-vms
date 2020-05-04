@@ -36,10 +36,6 @@
         "vnet_subnet_name": {
             "defaultValue": "default",
             "type": "String"
-        },
-        "proximity_group_name": {
-            "defaultValue": "",
-            "type": "String"
         }
     },
     "variables": {
@@ -51,8 +47,7 @@
             "name": "[parameters('vm_name')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic'))]",
-                "[concat('Microsoft.Compute/proximityPlacementGroups/',parameters('proximity_group_name'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic'))]"
             ],
             "zones": [
                 "1"
@@ -61,10 +56,6 @@
                 "hardwareProfile": {
                     "vmSize": "[parameters('vm_size')]"
                 },
-                "proximityPlacementGroup": {
-                    "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups',parameters('proximity_group_name'))]"
-                },
-
                 "storageProfile": {
                     "imageReference": {
                         "publisher": "RedHat",
@@ -130,8 +121,7 @@
             "name": "[concat(parameters('vm_name'), '_nic')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'), parameters('vnet_subnet_name'))]",
-                "[concat('Microsoft.Compute/proximityPlacementGroups/',parameters('proximity_group_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'), parameters('vnet_subnet_name'))]"
             ],
             "properties": {
                 "ipConfigurations": [

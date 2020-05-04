@@ -62,7 +62,7 @@
             ]
         },
         "Use Existing Virtual Network": {
-            "defaultValue": "False",
+            "defaultValue": false,
             "type": "Bool"
         },
         "Virtual Network Name": {
@@ -81,10 +81,6 @@
             "defaultValue": "metadataNSG",
             "type": "String"
         },
-        "Proximity PlacementGroup Name": {
-            "defaultValue": "prox1",
-            "type": "String"
-        },
         "ssh Key for VM Access": {
             "defaultValue": "",
             "type": "String"
@@ -94,19 +90,10 @@
     },
     "resources": [
         {
-            "apiVersion": "2019-07-01",
-            "type": "Microsoft.Compute/proximityPlacementGroups",
-            "name": "[parameters('Proximity PlacementGroup Name')]",
-            "properties": {
-            },
-            "location": "[resourceGroup().location]"
-        },
-        {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2019-12-01",
             "name": "[parameters('Compute Network Security Group Name')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
             ],
             "location": "[resourceGroup().location]",
             "properties": {
@@ -119,7 +106,6 @@
             "apiVersion": "2019-12-01",
             "name": "[parameters('Metadata Network Security Group Name')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
             ],
             "location": "[resourceGroup().location]",
             "properties": {
@@ -132,7 +118,6 @@
             "apiVersion": "2019-12-01",
             "name": "[parameters('Mid-tier Network Security Group Name')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
             ],
             "location": "[resourceGroup().location]",
             "properties": {
@@ -145,8 +130,7 @@
             "apiVersion": "2019-10-01",
             "name": "[concat('ParameterizedVM-', copyIndex())]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]",
-                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -161,8 +145,7 @@
                     "datadisk_count":  {"value":2},
                     "ssh_pub_key":  {"value":"[parameters('ssh Key for VM Access')]"},
                     "vnet_name":  {"value":"[parameters('Virtual Network Name')]"},
-                    "vnet_subnet_name":  {"value":"computeSubnet"},
-                    "proximity_group_name":  {"value":"[parameters('Proximity PlacementGroup Name')]"}
+                    "vnet_subnet_name":  {"value":"computeSubnet"}
                 }
             },
             "copy": {
@@ -178,8 +161,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Compute Network Security Group Name'))]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Mid-tier Network Security Group Name'))]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Metadata Network Security Group Name'))]",
-                "[concat('Microsoft.Compute/proximityPlacementGroups/', parameters('Proximity PlacementGroup Name'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('Metadata Network Security Group Name'))]"
             ],
            "properties": {
                 "addressSpace": {
