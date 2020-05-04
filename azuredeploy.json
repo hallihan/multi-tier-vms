@@ -204,7 +204,7 @@
                     "vnet_subnet_name": {
                         "value": "computeSubnet"
                     },
-                    "os_image":{
+                    "os_image": {
                         "value": "[variables('osProfile')['SL12']]"
                     }
                 }
@@ -255,7 +255,7 @@
                     "vnet_subnet_name": {
                         "value": "metadataSubnet"
                     },
-                    "os_image":{
+                    "os_image": {
                         "value": "[variables('osProfile')['RH7x']]"
                     }
                 }
@@ -306,7 +306,7 @@
                     "vnet_subnet_name": {
                         "value": "midtierSubnet"
                     },
-                    "os_image":{
+                    "os_image": {
                         "value": "[variables('osProfile')['RH7x']]"
                     }
 
@@ -392,7 +392,8 @@
                 "publicIPAllocationMethod": "Static"
             }
         },
-        {"type": "Microsoft.Network/bastionHosts",
+        {
+            "type": "Microsoft.Network/bastionHosts",
             "apiVersion": "2019-12-01",
             "name": "bastion",
             "location": "[resourceGroup().location]",
