@@ -14,15 +14,15 @@
             "type": "String"
         },
         "vm_size": {
-            "defaultValue": "",
+            "defaultValue": "Standard_D8s_v3",
             "type": "String"
         },
         "datadisk_size": {
-            "defaultValue": "",
+            "defaultValue": 64,
             "type": "Int"
         },
         "datadisk_count": {
-            "defaultValue": "0",
+            "defaultValue": 0,
             "type": "Int"
         },
         "ssh_pub_key": {
@@ -119,11 +119,7 @@
                             ]
                         },
                         "provisionVMAgent": true
-                    },
-                    "secrets": [
-                    ],
-                    "allowExtensionOperations": true,
-                    "requireGuestProvisionSignal": true
+                    }
                 }
             }
         },
