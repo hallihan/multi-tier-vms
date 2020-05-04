@@ -99,6 +99,20 @@
             "Standard_D8s_v3": 3,
             "Standard_D16s_v3": 6,
             "Standard_D32s_v3": 9
+        },
+        "osProfile": {
+            "RH7x": {
+                "publisher": "RedHat",
+                "offer": "RHEL",
+                "sku": "7-LVM",
+                "version": "latest"
+            },
+            "SL12": {
+                "publisher": "suse",
+                "offer": "sles-12-sp5-byos",
+                "sku": "gen1",
+                "version": "latest"
+            }
         }
     },
     "resources": [
@@ -189,6 +203,9 @@
                     },
                     "vnet_subnet_name": {
                         "value": "computeSubnet"
+                    },
+                    "os_image":{
+                        "value": "[variables('osProfile')['SL12']]"
                     }
                 }
             },
@@ -237,6 +254,9 @@
                     },
                     "vnet_subnet_name": {
                         "value": "metadataSubnet"
+                    },
+                    "os_image":{
+                        "value": "[variables('osProfile')['RH7x']]"
                     }
                 }
             },
@@ -285,7 +305,11 @@
                     },
                     "vnet_subnet_name": {
                         "value": "midtierSubnet"
+                    },
+                    "os_image":{
+                        "value": "[variables('osProfile')['RH7x']]"
                     }
+
                 }
             },
             "copy": {

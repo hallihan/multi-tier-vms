@@ -40,7 +40,11 @@
         "proximity_group_name": {
             "defaultValue": "",
             "type": "String"
+        },
+        "os_image": {
+            "type": "object"
         }
+
     },
     "variables": {
     },
@@ -64,12 +68,7 @@
                     "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups',parameters('proximity_group_name'))]"
                 },
                 "storageProfile": {
-                    "imageReference": {
-                        "publisher": "RedHat",
-                        "offer": "RHEL",
-                        "sku": "7-LVM",
-                        "version": "latest"
-                    },
+                    "imageReference": "[parameters('os_image')]",
                     "osDisk": {
                         "osType": "Linux",
                         "name": "[concat(parameters('vm_name'), '_OsDisk')]",
