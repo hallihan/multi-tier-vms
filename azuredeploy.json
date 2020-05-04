@@ -87,6 +87,11 @@
         }
     },
     "variables": {
+        "storageProfile":{
+                "Standard_D8s_v3":3,
+                "Standard_D16s_v3":6,
+                "Standard_D32s_v3:":9
+        }
     },
     "resources": [
         {
@@ -128,7 +133,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "name": "[concat('ParameterizedVM-', copyIndex())]",
+            "name": "[concat('ParameterizedComputeVM-', copyIndex())]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]"
             ],
@@ -139,10 +144,10 @@
                 },
                 "parameters": {
                     "location": {"value":"[resourceGroup().location]"},
-                    "vm_name": {"value":"[concat('compute-', copyIndex())]"},
+                    "vm_name": {"value":"[concat(parameters('Compute VM Name Base'),'-', copyIndex())]"},
                     "vm_size":  {"value":"[parameters('Compute VM Size')]"},
                     "datadisk_size":  {"value":128},
-                    "datadisk_count":  {"value":2},
+                    "datadisk_count":  {"value":"[variables('storageProfile')[parameters('Compute VM Size')]]"},
                     "ssh_pub_key":  {"value":"[parameters('ssh Key for VM Access')]"},
                     "vnet_name":  {"value":"[parameters('Virtual Network Name')]"},
                     "vnet_subnet_name":  {"value":"computeSubnet"}
@@ -151,6 +156,62 @@
             "copy": {
                 "name": "resourcecopy",
                 "count": "[parameters('Compute VM Count')]"
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "[concat('ParameterizedMetadataVM-', copyIndex())]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'paramvm.json')]"
+                },
+                "parameters": {
+                    "location": {"value":"[resourceGroup().location]"},
+                    "vm_name": {"value":"[concat(parameters('Metadata VM Name Base'),'-', copyIndex())]"},
+                    "vm_size":  {"value":"[parameters('Metadata VM Size')]"},
+                    "datadisk_size":  {"value":128},
+                    "datadisk_count":  {"value":"[variables('storageProfile')[parameters('Metadata VM Size')]]"},
+                    "ssh_pub_key":  {"value":"[parameters('ssh Key for VM Access')]"},
+                    "vnet_name":  {"value":"[parameters('Virtual Network Name')]"},
+                    "vnet_subnet_name":  {"value":"metadataSubnet"}
+                }
+            },
+            "copy": {
+                "name": "resourcecopy",
+                "count": "[parameters('Metadata VM Count')]"
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "[concat('ParameterizedMidtierVM-', copyIndex())]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'paramvm.json')]"
+                },
+                "parameters": {
+                    "location": {"value":"[resourceGroup().location]"},
+                    "vm_name": {"value":"[concat(parameters('Mid-Tier VM Name Base'),'-', copyIndex())]"},
+                    "vm_size":  {"value":"[parameters('Mid-tier VM Size')]"},
+                    "datadisk_size":  {"value":128},
+                    "datadisk_count":  {"value":"[variables('storageProfile')[parameters('Mid-tier VM Size')]]"},
+                    "ssh_pub_key":  {"value":"[parameters('ssh Key for VM Access')]"},
+                    "vnet_name":  {"value":"[parameters('Virtual Network Name')]"},
+                    "vnet_subnet_name":  {"value":"midtierSubnet"}
+                }
+            },
+            "copy": {
+                "name": "resourcecopy",
+                "count": "[parameters('Mid-Tier VM Count')]"
             }
         },
         {
