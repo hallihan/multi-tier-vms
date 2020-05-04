@@ -138,7 +138,6 @@
                     "uri": "[uri(deployment().properties.templateLink.uri, 'paramvm.json')]"
                 },
                 "parameters": {
-                    "location": "[resourceGroup().location]",
                     "vm_name": "[concat('compute-', copyIndex())]",
                     "vm_size": "[parameters('Compute VM Size')]",
                     "datadisk_size": "128",
