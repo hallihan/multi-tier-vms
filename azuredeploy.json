@@ -98,7 +98,7 @@
         "storageProfile": {
             "Standard_D8s_v3": 3,
             "Standard_D16s_v3": 6,
-            "Standard_D32s_v3:": 9
+            "Standard_D32s_v3": 9
         }
     },
     "resources": [
