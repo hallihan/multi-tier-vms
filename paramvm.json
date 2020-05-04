@@ -60,6 +60,9 @@
                 "hardwareProfile": {
                     "vmSize": "[parameters('vm_size')]"
                 },
+                "proximityPlacementGroup": {
+                    "id": "[resourceId('Microsoft.Compute/proximityPlacementGroups',parameters('proximity_group_name'))]"
+                },
                 "storageProfile": {
                     "imageReference": {
                         "publisher": "RedHat",
