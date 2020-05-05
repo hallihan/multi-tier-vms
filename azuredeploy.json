@@ -102,20 +102,20 @@
         },
         "osProfile": {
             "RH7x": {
-                "image":{
-                "publisher": "RedHat",
-                "offer": "RHEL",
-                "sku": "7-LVM",
-                "version": "latest"
+                "image": {
+                    "publisher": "RedHat",
+                    "offer": "RHEL",
+                    "sku": "7-LVM",
+                    "version": "latest"
                 },
                 "diskscript": "RHEL_raid_azure_data.sh"
             },
             "SL12": {
-                "image":{
-                "publisher": "suse",
-                "offer": "sles-12-sp5-basic",
-                "sku": "gen1",
-                "version": "latest"
+                "image": {
+                    "publisher": "suse",
+                    "offer": "sles-12-sp5-basic",
+                    "sku": "gen1",
+                    "version": "latest"
                 },
                 "diskscript": "SLES_raid_azure_data.sh"
             }
@@ -212,7 +212,11 @@
                     },
                     "os_image": {
                         "value": "[variables('osProfile')['SL12']['image']]"
+                    },
+                    "post_install_script": {
+                        "value": "[variables('osProfile')['SL12']['diskscript']]"
                     }
+
                 }
             },
             "copy": {
@@ -263,7 +267,11 @@
                     },
                     "os_image": {
                         "value": "[variables('osProfile')['RH7x']['image']]"
+                    },
+                    "post_install_script": {
+                        "value": "[variables('osProfile')['RH7x']['diskscript']]"
                     }
+
                 }
             },
             "copy": {
@@ -314,8 +322,10 @@
                     },
                     "os_image": {
                         "value": "[variables('osProfile')['RH7x']['image']]"
+                    },
+                    "post_install_script": {
+                        "value": "[variables('osProfile')['RH7x']['diskscript']]"
                     }
-
                 }
             },
             "copy": {
