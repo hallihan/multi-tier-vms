@@ -99,9 +99,9 @@
     },
     "variables": {
         "storageProfile": {
-            "Standard_D8s_v3": 3,
-            "Standard_D16s_v3": 6,
-            "Standard_D32s_v3": 9
+            "Standard_D8s_v3": 2,
+            "Standard_D16s_v3": 4,
+            "Standard_D32s_v3": 8
         },
         "storageProfileAdvanced": {
             "Standard_D8s_v3 2xP10 (256MB/node)": {
