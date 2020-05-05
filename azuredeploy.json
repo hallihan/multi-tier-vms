@@ -56,18 +56,21 @@
             "minValue": 0,
             "maxValue": 100
         },
-        "Compute VM Size": {
-            "defaultValue": "Standard_D8s_v3",
+        "Compute VM Template": {
+            "defaultValue": "Standard_D8s_v3 2xP10 (256MB/node)",
             "type": "String",
             "allowedValues": [
-                "Standard_D8s_v3",
-                "Standard_D16s_v3",
-                "Standard_D32s_v3"
+                "Standard_D8s_v3 2xP10 (256MB/node)",
+                "Standard_D8s_v3 1xP30 (1024MB/node)",
+                "Standard_D16s_v3 4xP10 (512MB/node)",
+                "Standard_D16s_v3 2xP30 (2048MB/node)",
+                "Standard_D32s_v3 8xP10 (1024MB/node)",
+                "Standard_D32s_v3 4xP30 (4096MB/node)",
+                "Standard_D48s_v3 12xP10 (1536MB/node)",
+                "Standard_D48s_v3 6xP30 (6144MB/node)",
+                "Standard_D64s_v3 12xP10 (1536MB/node)",
+                "Standard_D64s_v3 6xP30 (6144MB/node)"
             ]
-        },
-        "Use Existing Virtual Network": {
-            "defaultValue": false,
-            "type": "Bool"
         },
         "Virtual Network Name": {
             "defaultValue": "multitiervnet",
@@ -99,6 +102,58 @@
             "Standard_D8s_v3": 3,
             "Standard_D16s_v3": 6,
             "Standard_D32s_v3": 9
+        },
+        "storageProfileAdvanced": {
+            "Standard_D8s_v3 2xP10 (256MB/node)": {
+                "disksize":128,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":2
+            },
+            "Standard_D8s_v3 1xP30 (1024MB/node)": {
+                "disksize":1024,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":1
+            },
+            "Standard_D16s_v3 4xP10 (512MB/node)": {
+                "disksize":128,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":4
+            },
+            "Standard_D16s_v3 2xP30 (2048MB/node)": {
+                "disksize":1024,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":2
+            },
+            "Standard_D32s_v3 8xP10 (1024MB/node)": {
+                "disksize":128,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":8
+            },
+            "Standard_D32s_v3 4xP30 (4096MB/node)": {
+                "disksize":1024,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":4
+            },
+            "Standard_D48s_v3 12xP10 (1536MB/node)": {
+                "disksize":128,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":12
+            },
+            "Standard_D48s_v3 6xP30 (6144MB/node)": {
+                "disksize":1024,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":6
+            },
+            "Standard_D64s_v3 12xP10 (1536MB/node)": {
+                "disksize":128,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":12
+            },
+            "Standard_D64s_v3 6xP30 (6144MB/node)": {
+                "disksize":1024,
+                "vmsize":"Standard_D8s_v3",
+                "diskcount":6
+            }
         },
         "osProfile": {
             "RH7x": {
@@ -190,13 +245,13 @@
                         "value": "[concat(parameters('Compute VM Name Base'),'-', copyIndex())]"
                     },
                     "vm_size": {
-                        "value": "[parameters('Compute VM Size')]"
+                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['vmsize']]"
                     },
                     "datadisk_size": {
-                        "value": 128
+                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['disksize']]"
                     },
                     "datadisk_count": {
-                        "value": "[variables('storageProfile')[parameters('Compute VM Size')]]"
+                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['diskcount']]"
                     },
                     "proximity_group_name": {
                         "value": "[parameters('Proximity PlacementGroup Name')]"
