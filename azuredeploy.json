@@ -102,16 +102,22 @@
         },
         "osProfile": {
             "RH7x": {
+                "image":{
                 "publisher": "RedHat",
                 "offer": "RHEL",
                 "sku": "7-LVM",
                 "version": "latest"
+                },
+                "diskscript": "zypper install -y mdadm\nN=$(find ./ -name \"*.json\"|wc -l)\nN=\"${N//\ /}\"\nmdadm --create /dev/md0 --level=stripe --raid-devices=$N /dev/disk/azure/scsi1/lun*\nmkfs.xfs /dev/md0\nmkdir /mnt/raid0\necho \"$(sudo blkid /dev/md0 | cut -d ' ' -f 2) /mnt/raid0 xfs defaults 0 0\" | tee -a /etc/fstab\nmount /mnt/raid0"
             },
             "SL12": {
+                "image":{
                 "publisher": "suse",
                 "offer": "sles-12-sp5-basic",
                 "sku": "gen1",
                 "version": "latest"
+                },
+                "diskscript": "yum install -y mdadm\nN=$(find ./ -name \"*.json\"|wc -l)\nN=\"${N//\ /}\"\nmdadm --create /dev/md0 --level=stripe --raid-devices=$N /dev/disk/azure/scsi1/lun*\nmkfs.xfs /dev/md0\nmkdir /mnt/raid0\necho \"$(sudo blkid /dev/md0 | cut -d ' ' -f 2) /mnt/raid0 xfs defaults 0 0\" | tee -a /etc/fstab\nmount /mnt/raid0"
             }
         }
     },
@@ -205,7 +211,7 @@
                         "value": "computeSubnet"
                     },
                     "os_image": {
-                        "value": "[variables('osProfile')['SL12']]"
+                        "value": "[variables('osProfile')['SL12']['image']]"
                     }
                 }
             },
@@ -256,7 +262,7 @@
                         "value": "metadataSubnet"
                     },
                     "os_image": {
-                        "value": "[variables('osProfile')['RH7x']]"
+                        "value": "[variables('osProfile')['RH7x']['image']]"
                     }
                 }
             },
@@ -307,7 +313,7 @@
                         "value": "midtierSubnet"
                     },
                     "os_image": {
-                        "value": "[variables('osProfile')['RH7x']]"
+                        "value": "[variables('osProfile')['RH7x']['image']]"
                     }
 
                 }

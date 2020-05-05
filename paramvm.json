@@ -43,6 +43,10 @@
         },
         "os_image": {
             "type": "object"
+        },
+        "post_install_script": {
+            "defaultValue": "",
+            "type": "String"
         }
 
     },
@@ -146,6 +150,25 @@
                 },
                 "enableAcceleratedNetworking": true,
                 "enableIPForwarding": false
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2019-07-01",
+            "name": "[concat(parameters('vm_name'), '_post_install_script')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines',parameters('vm_name'))]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.1",
+                "autoUpgradeMinorVersion": true,
+                "protectedSettings":{
+                    "commandToExecute": "[concat('sh ',parameters('post_install_script'))]",
+                    "fileUris":["[uri(deployment().properties.templateLink.uri, parameters('post_install_script'))]"]
+                }
             }
         }
     ]
