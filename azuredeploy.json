@@ -116,42 +116,42 @@
             },
             "Standard_D16s_v3 4xP10 (512MB/node)": {
                 "disksize":128,
-                "vmsize":"Standard_D8s_v3",
+                "vmsize":"Standard_D16s_v3",
                 "diskcount":4
             },
             "Standard_D16s_v3 2xP30 (2048MB/node)": {
                 "disksize":1024,
-                "vmsize":"Standard_D8s_v3",
+                "vmsize":"Standard_D16s_v3",
                 "diskcount":2
             },
             "Standard_D32s_v3 8xP10 (1024MB/node)": {
                 "disksize":128,
-                "vmsize":"Standard_D8s_v3",
+                "vmsize":"Standard_D32s_v3",
                 "diskcount":8
             },
             "Standard_D32s_v3 4xP30 (4096MB/node)": {
                 "disksize":1024,
-                "vmsize":"Standard_D8s_v3",
+                "vmsize":"Standard_D32s_v3",
                 "diskcount":4
             },
             "Standard_D48s_v3 12xP10 (1536MB/node)": {
                 "disksize":128,
-                "vmsize":"Standard_D8s_v3",
+                "vmsize":"Standard_D48s_v3",
                 "diskcount":12
             },
             "Standard_D48s_v3 6xP30 (6144MB/node)": {
                 "disksize":1024,
-                "vmsize":"Standard_D8s_v3",
+                "vmsize":"Standard_D48s_v3",
                 "diskcount":6
             },
             "Standard_D64s_v3 12xP10 (1536MB/node)": {
                 "disksize":128,
-                "vmsize":"Standard_D8s_v3",
+                "vmsize":"Standard_D64s_v3",
                 "diskcount":12
             },
             "Standard_D64s_v3 6xP30 (6144MB/node)": {
                 "disksize":1024,
-                "vmsize":"Standard_D8s_v3",
+                "vmsize":"Standard_D64s_v3",
                 "diskcount":6
             }
         },
