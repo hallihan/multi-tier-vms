@@ -128,7 +128,7 @@
                 {
                     "type": "Microsoft.Compute/virtualMachines/extensions",
                     "apiVersion": "2019-07-01",
-                    "name": "[concat(parameters('vm_name'), '_post_install_script')]",
+                    "name": "[concat(parameters('vm_name'), '/post_install_script')]",
                     "location": "[parameters('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Compute/virtualMachines',parameters('vm_name'))]"
