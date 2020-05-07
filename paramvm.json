@@ -34,7 +34,8 @@
             "type": "String"
         },
         "vnet_resource_group": {
-            "defaultValue": "[resourceGroup().name]"
+            "defaultValue": "[resourceGroup().name]",
+            "type": "String"
         },
         "vnet_subnet_name": {
             "defaultValue": "default",
