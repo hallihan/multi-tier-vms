@@ -513,7 +513,7 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip'))]"
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('Virtual Network Name'), 'AzureBastionSubnet')]"
+                                "id": "[resourceId(parameters('Virtual Network Resource Group'), 'Microsoft.Network/virtualNetworks/subnets', parameters('Virtual Network Name'), 'AzureBastionSubnet')]"
                             }
                         }
                     }
