@@ -2,6 +2,28 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "Use a New or Existing Virtual Network?": {
+            "type": "string",
+            "defaultValue": "new",
+            "allowedValues": [
+                "New",
+                "Existing"
+            ],
+            "metadata": {
+                "description": "Specify whether to create a new or existing virtual network for the VMs.  If using an existing virtual network it must have subnets: GatewaySubnet, AzureBastionSubnet, computeSubnet, midtierSubnet, metadataSubnet."
+            }
+        },
+        "Virtual Network Resource Group": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().name]",
+            "metadata": {
+                "description": "Name of the resource group if using an existing Virtual Network"
+            }
+        },
+        "Virtual Network Name": {
+            "defaultValue": "multitiervnet",
+            "type": "String"
+        },
         "Mid-Tier VM Name Base": {
             "defaultValue": "midtier",
             "type": "String"
@@ -72,10 +94,6 @@
                 "Standard_D64s_v3 6xP30 (6144MB/node)"
             ]
         },
-        "Virtual Network Name": {
-            "defaultValue": "multitiervnet",
-            "type": "String"
-        },
         "Compute Network Security Group Name": {
             "defaultValue": "computeNSG",
             "type": "String"
@@ -105,54 +123,54 @@
         },
         "storageProfileAdvanced": {
             "Standard_D8s_v3 2xP10 (256MB/node)": {
-                "disksize":128,
-                "vmsize":"Standard_D8s_v3",
-                "diskcount":2
+                "disksize": 128,
+                "vmsize": "Standard_D8s_v3",
+                "diskcount": 2
             },
             "Standard_D8s_v3 1xP30 (1024MB/node)": {
-                "disksize":1024,
-                "vmsize":"Standard_D8s_v3",
-                "diskcount":1
+                "disksize": 1024,
+                "vmsize": "Standard_D8s_v3",
+                "diskcount": 1
             },
             "Standard_D16s_v3 4xP10 (512MB/node)": {
-                "disksize":128,
-                "vmsize":"Standard_D16s_v3",
-                "diskcount":4
+                "disksize": 128,
+                "vmsize": "Standard_D16s_v3",
+                "diskcount": 4
             },
             "Standard_D16s_v3 2xP30 (2048MB/node)": {
-                "disksize":1024,
-                "vmsize":"Standard_D16s_v3",
-                "diskcount":2
+                "disksize": 1024,
+                "vmsize": "Standard_D16s_v3",
+                "diskcount": 2
             },
             "Standard_D32s_v3 8xP10 (1024MB/node)": {
-                "disksize":128,
-                "vmsize":"Standard_D32s_v3",
-                "diskcount":8
+                "disksize": 128,
+                "vmsize": "Standard_D32s_v3",
+                "diskcount": 8
             },
             "Standard_D32s_v3 4xP30 (4096MB/node)": {
-                "disksize":1024,
-                "vmsize":"Standard_D32s_v3",
-                "diskcount":4
+                "disksize": 1024,
+                "vmsize": "Standard_D32s_v3",
+                "diskcount": 4
             },
             "Standard_D48s_v3 12xP10 (1536MB/node)": {
-                "disksize":128,
-                "vmsize":"Standard_D48s_v3",
-                "diskcount":12
+                "disksize": 128,
+                "vmsize": "Standard_D48s_v3",
+                "diskcount": 12
             },
             "Standard_D48s_v3 6xP30 (6144MB/node)": {
-                "disksize":1024,
-                "vmsize":"Standard_D48s_v3",
-                "diskcount":6
+                "disksize": 1024,
+                "vmsize": "Standard_D48s_v3",
+                "diskcount": 6
             },
             "Standard_D64s_v3 12xP10 (1536MB/node)": {
-                "disksize":128,
-                "vmsize":"Standard_D64s_v3",
-                "diskcount":12
+                "disksize": 128,
+                "vmsize": "Standard_D64s_v3",
+                "diskcount": 12
             },
             "Standard_D64s_v3 6xP30 (6144MB/node)": {
-                "disksize":1024,
-                "vmsize":"Standard_D64s_v3",
-                "diskcount":6
+                "disksize": 1024,
+                "vmsize": "Standard_D64s_v3",
+                "diskcount": 6
             }
         },
         "osProfile": {
@@ -187,6 +205,7 @@
         },
         {
             "type": "Microsoft.Network/networkSecurityGroups",
+            "condition": "[equals(parameters('Use a New or Existing Virtual Network?'), 'New')]",
             "apiVersion": "2019-12-01",
             "name": "[parameters('Compute Network Security Group Name')]",
             "dependsOn": [
@@ -200,6 +219,7 @@
         },
         {
             "type": "Microsoft.Network/networkSecurityGroups",
+            "condition": "[equals(parameters('Use a New or Existing Virtual Network?'), 'New')]",
             "apiVersion": "2019-12-01",
             "name": "[parameters('Metadata Network Security Group Name')]",
             "dependsOn": [
@@ -215,6 +235,7 @@
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2019-12-01",
             "name": "[parameters('Mid-tier Network Security Group Name')]",
+            "condition": "[equals(parameters('Use a New or Existing Virtual Network?'), 'New')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
             ],
@@ -261,6 +282,9 @@
                     },
                     "vnet_name": {
                         "value": "[parameters('Virtual Network Name')]"
+                    },
+                    "vnet_resource_group": {
+                        "value": "[parameters('Virtual Network Resource Group')]"
                     },
                     "vnet_subnet_name": {
                         "value": "computeSubnet"
@@ -317,6 +341,9 @@
                     "vnet_name": {
                         "value": "[parameters('Virtual Network Name')]"
                     },
+                    "vnet_resource_group": {
+                        "value": "[parameters('Virtual Network Resource Group')]"
+                    },
                     "vnet_subnet_name": {
                         "value": "metadataSubnet"
                     },
@@ -372,6 +399,9 @@
                     "vnet_name": {
                         "value": "[parameters('Virtual Network Name')]"
                     },
+                    "vnet_resource_group": {
+                        "value": "[parameters('Virtual Network Resource Group')]"
+                    },
                     "vnet_subnet_name": {
                         "value": "midtierSubnet"
                     },
@@ -390,6 +420,7 @@
         },
         {
             "type": "Microsoft.Network/virtualNetworks",
+            "condition": "[equals(parameters('Use a New or Existing Virtual Network?'), 'New')]",
             "apiVersion": "2019-12-01",
             "name": "[parameters('Virtual Network Name')]",
             "location": "[resourceGroup().location]",

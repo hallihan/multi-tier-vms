@@ -33,6 +33,9 @@
             "defaultValue": "",
             "type": "String"
         },
+        "vnet_resource_group": {
+            "defaultValue": "[resourceGroup().name]"
+        },
         "vnet_subnet_name": {
             "defaultValue": "default",
             "type": "String"
@@ -160,7 +163,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'), parameters('vnet_subnet_name'))]"
+                                "id": "[resourceId(parameters('vnet_resource_group'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'),  parameters('vnet_subnet_name'))]"
                             },
                             "primary": true,
                             "privateIPAddressVersion": "IPv4"
