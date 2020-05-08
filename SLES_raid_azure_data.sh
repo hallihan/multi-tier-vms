@@ -1,4 +1,6 @@
 #!/bin/bash
+# Sleep 30 seconds to allow network to stabalize before attempting package install
+sleep 30
 zypper install -y mdadm
 n=$(find /dev/disk/azure/scsi1/ -name "lun*"|wc -l)
 n="${n//\ /}"

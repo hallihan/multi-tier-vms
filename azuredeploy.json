@@ -13,11 +13,11 @@
                 "description": "Specify whether to create a new or existing virtual network for the VMs.  If using an existing virtual network it must have subnets: GatewaySubnet, AzureBastionSubnet, computeSubnet, midtierSubnet, metadataSubnet."
             }
         },
-        "Virtual Network Resource Group": {
+        "Existing Virtual Network Resource Group": {
             "type": "string",
-            "defaultValue": "[resourceGroup().name]",
+            "defaultValue": "",
             "metadata": {
-                "description": "Name of the resource group if using an existing Virtual Network"
+                "description": "Name of the resource group if using an existing Virtual Network, leave blank if creating a new Virtual Network."
             }
         },
         "Virtual Network Name": {
@@ -116,6 +116,7 @@
         }
     },
     "variables": {
+        "vnet_resource_group_name": "[if(equals(parameters('Use a New or Existing Virtual Network?'),'New'),resourceGroup().name,parameters('Existing Virtual Network Resource Group'))]",
         "storageProfile": {
             "Standard_D8s_v3": 2,
             "Standard_D16s_v3": 4,
@@ -284,7 +285,7 @@
                         "value": "[parameters('Virtual Network Name')]"
                     },
                     "vnet_resource_group": {
-                        "value": "[parameters('Virtual Network Resource Group')]"
+                        "value": "[variables('vnet_resource_group_name')]"
                     },
                     "vnet_subnet_name": {
                         "value": "computeSubnet"
@@ -342,7 +343,7 @@
                         "value": "[parameters('Virtual Network Name')]"
                     },
                     "vnet_resource_group": {
-                        "value": "[parameters('Virtual Network Resource Group')]"
+                        "value": "[variables('vnet_resource_group_name')]"
                     },
                     "vnet_subnet_name": {
                         "value": "metadataSubnet"
@@ -400,7 +401,7 @@
                         "value": "[parameters('Virtual Network Name')]"
                     },
                     "vnet_resource_group": {
-                        "value": "[parameters('Virtual Network Resource Group')]"
+                        "value": "[variables('vnet_resource_group_name')]"
                     },
                     "vnet_subnet_name": {
                         "value": "midtierSubnet"
@@ -513,7 +514,7 @@
                                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip'))]"
                             },
                             "subnet": {
-                                "id": "[resourceId(parameters('Virtual Network Resource Group'), 'Microsoft.Network/virtualNetworks/subnets', parameters('Virtual Network Name'), 'AzureBastionSubnet')]"
+                                "id": "[resourceId(variables('vnet_resource_group_name'), 'Microsoft.Network/virtualNetworks/subnets', parameters('Virtual Network Name'), 'AzureBastionSubnet')]"
                             }
                         }
                     }
