@@ -360,6 +360,9 @@
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['compute']]"
+                    },
+                    "public_ip_or_empty": {
+                        "value": ""
                     }
                 }
             },
@@ -420,6 +423,9 @@
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['metadata']]"
+                    },
+                    "public_ip_or_empty": {
+                        "value": ""
                     }
                 }
             },
@@ -480,6 +486,9 @@
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['midtier']]"
+                    },
+                    "public_ip_or_empty": {
+                        "value": ""
                     }
                 }
             },
@@ -543,9 +552,7 @@
                         "value": "[variables('postInstallActions')['jump']]"
                     },
                     "public_ip_or_empty": {
-                        "value": {
-                            "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]"
-                        }
+                        "value": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]"
                     }
                 }
             }

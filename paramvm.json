@@ -56,8 +56,8 @@
             "type": "object"
         },
         "public_ip_or_empty" : {
-            "type": "object",
-            "defaultValue": {}
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
@@ -178,6 +178,35 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-12-01",
+            "condition": "[equals(parameters('public_ip_or_empty'), '')]",
+            "name": "[concat(parameters('vm_name'), '_nic')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId(parameters('vnet_resource_group'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'),  parameters('vnet_subnet_name'))]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [
+                    ]
+                },
+                "enableAcceleratedNetworking": true,
+                "enableIPForwarding": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-12-01",
+            "condition": "[not(equals(parameters('public_ip_or_empty'), ''))]",
             "name": "[concat(parameters('vm_name'), '_nic')]",
             "location": "[parameters('location')]",
             "properties": {
@@ -203,5 +232,6 @@
                 "enableIPForwarding": false
             }
         }
+
     ]
 }
