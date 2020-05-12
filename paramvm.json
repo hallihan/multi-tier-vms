@@ -69,7 +69,7 @@
             "name": "[parameters('vm_name')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic'))]"
+                "[if(equals(parameters('public_ip_or_empty'), ''),resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic')),resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic_pip')))]"
             ],
             "zones": [
                 "1"
@@ -113,7 +113,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic'))]"
+                            "id": "[if(equals(parameters('public_ip_or_empty'), ''),resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic')),resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vm_name'), '_nic_pip')))]"
                         }
                     ]
                 },
@@ -207,7 +207,7 @@
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-12-01",
             "condition": "[not(equals(parameters('public_ip_or_empty'), ''))]",
-            "name": "[concat(parameters('vm_name'), '_nic')]",
+            "name": "[concat(parameters('vm_name'), '_nic_pip')]",
             "location": "[parameters('location')]",
             "properties": {
                 "ipConfigurations": [
