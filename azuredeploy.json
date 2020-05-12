@@ -193,6 +193,27 @@
                 },
                 "diskscript": "SLES_raid_azure_data.sh"
             }
+        },
+        "postInstallActions": {
+            "compute": {
+                "commandToExecute": "sh ExamplePostInstall1.sh",
+                "fileUris": [
+                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]"
+                ]
+            },
+            "midtier": {
+                "commandToExecute": "sh ExamplePostInstall2.sh;",
+                "fileUris": [
+                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall2.sh')]"
+                ]
+            },
+            "metadata": {
+                "commandToExecute": "sh ExamplePostInstall1.sh; sh ExamplePostInstall2.sh;",
+                "fileUris": [
+                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]",
+                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall2.sh')]"
+                ]
+            }
         }
     },
     "resources": [
@@ -295,8 +316,10 @@
                     },
                     "post_install_script": {
                         "value": "[variables('osProfile')['SL12']['diskscript']]"
+                    },
+                    "post_install_actions": {
+                        "value": "[variables('postInstallActions')['compute']]"
                     }
-
                 }
             },
             "copy": {
@@ -353,8 +376,10 @@
                     },
                     "post_install_script": {
                         "value": "[variables('osProfile')['RH7x']['diskscript']]"
+                    },
+                    "post_install_actions": {
+                        "value": "[variables('postInstallActions')['metadata']]"
                     }
-
                 }
             },
             "copy": {
@@ -411,6 +436,9 @@
                     },
                     "post_install_script": {
                         "value": "[variables('osProfile')['RH7x']['diskscript']]"
+                    },
+                    "post_install_actions": {
+                        "value": "[variables('postInstallActions')['midtier']]"
                     }
                 }
             },
