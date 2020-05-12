@@ -54,6 +54,10 @@
         },
         "post_install_actions": {
             "type": "object"
+        },
+        "public_ip_or_null" : {
+            "type": "string",
+            "defaultValue": null
         }
     },
     "variables": {
@@ -186,7 +190,8 @@
                                 "id": "[resourceId(parameters('vnet_resource_group'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'),  parameters('vnet_subnet_name'))]"
                             },
                             "primary": true,
-                            "privateIPAddressVersion": "IPv4"
+                            "privateIPAddressVersion": "IPv4",
+                            "publicIPAddress":"[parameters('public_ip_or_null')]"
                         }
                     }
                 ],

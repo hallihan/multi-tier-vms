@@ -113,6 +113,13 @@
         "ssh Key for VM Access": {
             "defaultValue": "",
             "type": "String"
+        },
+        "Allow management from IP or CIDR block": {
+            "defaultValue":"0.0.0.0/0",
+            "type": "string",
+            "metadata": {
+                "description": "Default value of 0.0.0.0/0 allows management from the entire Internet"
+            }
         }
     },
     "variables": {
@@ -213,6 +220,12 @@
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]",
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall2.sh')]"
                 ]
+            },
+            "jump": {
+                "commandToExecute": "sh SetupJump.sh",
+                "fileUris": [
+                    "[uri(deployment().properties.templateLink.uri, 'SetUpJump.sh')]"
+                ]
             }
         }
     },
@@ -264,6 +277,34 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": [
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2019-12-01",
+            "name": "jumpNSG",
+            "condition": "[equals(parameters('Use a New or Existing Virtual Network?'), 'New')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+            ],
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "allow_ssh_from_ip_or_range",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "[parameters('Allow management from IP or CIDR block')]",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 500,
+                            "direction": "Inbound"
+                        }
+                    }
                 ]
             }
         },
@@ -448,6 +489,64 @@
             }
         },
         {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "ParameterizedJumpVM",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]",
+                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'paramvm.json')]"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[resourceGroup().location]"
+                    },
+                    "vm_name": {
+                        "value": "jumpvm"
+                    },
+                    "vm_size": {
+                        "value": "Standard_B2ms"
+                    },
+                    "datadisk_size": {
+                        "value": 128
+                    },
+                    "datadisk_count": {
+                        "value": 1
+                    },
+                    "proximity_group_name": {
+                        "value": "[parameters('Proximity PlacementGroup Name')]"
+                    },
+                    "ssh_pub_key": {
+                        "value": "[parameters('ssh Key for VM Access')]"
+                    },
+                    "vnet_name": {
+                        "value": "[parameters('Virtual Network Name')]"
+                    },
+                    "vnet_resource_group": {
+                        "value": "[variables('vnet_resource_group_name')]"
+                    },
+                    "vnet_subnet_name": {
+                        "value": "jumpSubnet"
+                    },
+                    "os_image": {
+                        "value": "[variables('osProfile')['RH7x']['image']]"
+                    },
+                    "post_install_script": {
+                        "value": "[variables('osProfile')['RH7x']['diskscript']]"
+                    },
+                    "post_install_actions": {
+                        "value": "[variables('postInstallActions')['jump']]"
+                    },
+                    "public_ip_or_null":"[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]"
+                }
+            }
+        },
+        {
             "type": "Microsoft.Network/virtualNetworks",
             "condition": "[equals(parameters('Use a New or Existing Virtual Network?'), 'New')]",
             "apiVersion": "2019-12-01",
@@ -476,6 +575,15 @@
                         "name": "AzureBastionSubnet",
                         "properties": {
                             "addressPrefix": "10.2.0.192/27"
+                        }
+                    },
+                    {
+                        "name": "jumpSubnet",
+                        "properties": {
+                            "addressPrefix": "10.2.0.160/27",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'jumpNSG')]"
+                            }
                         }
                     },
                     {
@@ -511,7 +619,37 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2019-12-01",
-            "name": "[concat(parameters('Virtual Network Name'),'-ip')]",
+            "name": "[concat(parameters('Virtual Network Name'),'-ip-bastion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+            ],
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('Virtual Network Name'),'-ip-jump')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+            ],
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-12-01",
+            "name": "[concat(parameters('Virtual Network Name'),'-ip-loadbalancer')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
@@ -539,7 +677,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-bastion'))]"
                             },
                             "subnet": {
                                 "id": "[resourceId(variables('vnet_resource_group_name'), 'Microsoft.Network/virtualNetworks/subnets', parameters('Virtual Network Name'), 'AzureBastionSubnet')]"
