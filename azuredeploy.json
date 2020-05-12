@@ -360,9 +360,6 @@
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['compute']]"
-                    },
-                    "public_ip_or_null": {
-                        "value":null
                     }
                 }
             },
@@ -423,9 +420,6 @@
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['metadata']]"
-                    },
-                    "public_ip_or_null": {
-                        "value":null
                     }
                 }
             },
@@ -486,9 +480,6 @@
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['midtier']]"
-                    },
-                    "public_ip_or_null": {
-                        "value":null
                     }
                 }
             },

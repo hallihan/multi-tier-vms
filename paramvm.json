@@ -56,7 +56,7 @@
             "type": "object"
         },
         "public_ip_or_null" : {
-            "type": "string",
+            "type": "object",
             "defaultValue": null
         }
     },
