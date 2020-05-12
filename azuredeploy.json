@@ -120,6 +120,11 @@
             "metadata": {
                 "description": "Default value of 0.0.0.0/0 allows management from the entire Internet"
             }
+        },
+        "Deploy Azure Bastion": {
+            "defaultValue": "No",
+            "type": "String",
+            "allowedValues":["No","Yes"]
         }
     },
     "variables": {
@@ -680,6 +685,7 @@
             "type": "Microsoft.Network/bastionHosts",
             "apiVersion": "2019-12-01",
             "name": "bastion",
+            "condition": "[equals(parameters('Deploy Azure Bastion'), 'Yes')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]",
