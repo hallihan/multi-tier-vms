@@ -163,7 +163,7 @@
                     "location": "[parameters('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Compute/virtualMachines',parameters('vm_name'))]",
-                        "[resourceId('Microsoft.Compute/virtualMachines',concat(parameters('vm_name'), '/post_install_script'))]"
+                        "[resourceId('Microsoft.Compute/virtualMachines',parameters('vm_name'), 'post_install_script')]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Azure.Extensions",
