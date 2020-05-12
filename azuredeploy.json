@@ -233,7 +233,7 @@
                 "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh SetUpJump.sh')]",
                 "fileUris": [
                     "[uri(deployment().properties.templateLink.uri, variables('osProfile')['RH7x']['diskscript'])]",
-                    "[uri(deployment().properties.templateLink.uri, 'SetUpJump.sh')]"
+                    "[uri(deployment().properties.templateLink.uri, 'SetupJump.sh')]"
                 ]
             }
         }
