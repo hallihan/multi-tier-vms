@@ -58,6 +58,10 @@
         "public_ip_or_empty": {
             "type": "string",
             "defaultValue": ""
+        },
+        "enable_enhanced_networking":{
+            "type": "bool",
+            "defaultValue": true
         }
     },
     "variables": {
@@ -199,7 +203,7 @@
                     "dnsServers": [
                     ]
                 },
-                "enableAcceleratedNetworking": true,
+                "enableAcceleratedNetworking": "[parameters('enable_enhanced_networking')]",
                 "enableIPForwarding": false
             }
         },
@@ -230,7 +234,7 @@
                     "dnsServers": [
                     ]
                 },
-                "enableAcceleratedNetworking": true,
+                "enableAcceleratedNetworking": "[parameters('enable_enhanced_networking')]",
                 "enableIPForwarding": false
             }
         }

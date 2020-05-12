@@ -361,6 +361,9 @@
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['compute']]"
                     },
+                    "enable_enhanced_networking": {
+                        "value": true
+                    },
                     "public_ip_or_empty": {
                         "value": ""
                     }
@@ -423,6 +426,9 @@
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['metadata']]"
+                    },
+                    "enable_enhanced_networking": {
+                        "value": true
                     },
                     "public_ip_or_empty": {
                         "value": ""
@@ -487,6 +493,9 @@
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['midtier']]"
                     },
+                    "enable_enhanced_networking": {
+                        "value": true
+                    },
                     "public_ip_or_empty": {
                         "value": ""
                     }
@@ -550,6 +559,9 @@
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['jump']]"
+                    },
+                    "enable_enhanced_networking": {
+                        "value": false
                     },
                     "public_ip_or_empty": {
                         "value": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]"
