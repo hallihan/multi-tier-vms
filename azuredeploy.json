@@ -115,7 +115,7 @@
             "type": "String"
         },
         "Allow management from IP or CIDR block": {
-            "defaultValue":"0.0.0.0/0",
+            "defaultValue": "0.0.0.0/0",
             "type": "string",
             "metadata": {
                 "description": "Default value of 0.0.0.0/0 allows management from the entire Internet"
@@ -542,8 +542,10 @@
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['jump']]"
                     },
-                    "public_ip_or_null": {
-                        "value":"[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]"
+                    "public_ip_or_empty": {
+                        "value": {
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]"
+                        }
                     }
                 }
             }

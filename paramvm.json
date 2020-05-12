@@ -55,9 +55,9 @@
         "post_install_actions": {
             "type": "object"
         },
-        "public_ip_or_null" : {
+        "public_ip_or_empty" : {
             "type": "object",
-            "defaultValue": null
+            "defaultValue": {}
         }
     },
     "variables": {
@@ -191,7 +191,7 @@
                             },
                             "primary": true,
                             "privateIPAddressVersion": "IPv4",
-                            "publicIPAddress":"[parameters('public_ip_or_null')]"
+                            "publicIPAddress":"[parameters('public_ip_or_empty')]"
                         }
                     }
                 ],
