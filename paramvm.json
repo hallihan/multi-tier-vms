@@ -48,10 +48,6 @@
         "os_image": {
             "type": "object"
         },
-        "post_install_script": {
-            "defaultValue": "",
-            "type": "String"
-        },
         "post_install_actions": {
             "type": "object"
         },
@@ -142,32 +138,10 @@
                 {
                     "type": "Microsoft.Compute/virtualMachines/extensions",
                     "apiVersion": "2019-07-01",
-                    "name": "[concat(parameters('vm_name'), '/post_install_script')]",
-                    "location": "[parameters('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines',parameters('vm_name'))]"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.Azure.Extensions",
-                        "type": "CustomScript",
-                        "typeHandlerVersion": "2.1",
-                        "autoUpgradeMinorVersion": true,
-                        "protectedSettings": {
-                            "commandToExecute": "[concat('sh ',parameters('post_install_script'))]",
-                            "fileUris": [
-                                "[uri(deployment().properties.templateLink.uri, parameters('post_install_script'))]"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "type": "Microsoft.Compute/virtualMachines/extensions",
-                    "apiVersion": "2019-07-01",
                     "name": "[concat(parameters('vm_name'), '/post_install_actions')]",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines',parameters('vm_name'))]",
-                        "[resourceId('Microsoft.Compute/virtualMachines/extensions',parameters('vm_name'), 'post_install_script')]"
+                        "[resourceId('Microsoft.Compute/virtualMachines',parameters('vm_name'))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Azure.Extensions",

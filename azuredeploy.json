@@ -203,27 +203,31 @@
         },
         "postInstallActions": {
             "compute": {
-                "commandToExecute": "sh ExamplePostInstall1.sh",
+                "commandToExecute": "[concat('sh ',variables('osProfile')['SL12']['diskscript'],'; sh ExamplePostInstall1.sh')]",
                 "fileUris": [
+                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')['SL12']['diskscript'])]",
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]"
                 ]
             },
             "midtier": {
-                "commandToExecute": "sh ExamplePostInstall2.sh;",
+                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh ExamplePostInstall2.sh')]",
                 "fileUris": [
+                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')['RH7x']['diskscript'])]",
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall2.sh')]"
                 ]
             },
             "metadata": {
-                "commandToExecute": "sh ExamplePostInstall1.sh; sh ExamplePostInstall2.sh;",
+                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh ExamplePostInstall1.sh; sh ExamplePostInstall2.sh')]",
                 "fileUris": [
+                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')['RH7x']['diskscript'])]",
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]",
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall2.sh')]"
                 ]
             },
             "jump": {
-                "commandToExecute": "sh SetupJump.sh",
+                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh SetUpJump.sh')]",
                 "fileUris": [
+                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')['RH7x']['diskscript'])]",
                     "[uri(deployment().properties.templateLink.uri, 'SetUpJump.sh')]"
                 ]
             }
@@ -355,9 +359,6 @@
                     "os_image": {
                         "value": "[variables('osProfile')['SL12']['image']]"
                     },
-                    "post_install_script": {
-                        "value": "[variables('osProfile')['SL12']['diskscript']]"
-                    },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['compute']]"
                     },
@@ -420,9 +421,6 @@
                     },
                     "os_image": {
                         "value": "[variables('osProfile')['RH7x']['image']]"
-                    },
-                    "post_install_script": {
-                        "value": "[variables('osProfile')['RH7x']['diskscript']]"
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['metadata']]"
@@ -487,9 +485,6 @@
                     "os_image": {
                         "value": "[variables('osProfile')['RH7x']['image']]"
                     },
-                    "post_install_script": {
-                        "value": "[variables('osProfile')['RH7x']['diskscript']]"
-                    },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['midtier']]"
                     },
@@ -553,9 +548,6 @@
                     },
                     "os_image": {
                         "value": "[variables('osProfile')['RH7x']['image']]"
-                    },
-                    "post_install_script": {
-                        "value": "[variables('osProfile')['RH7x']['diskscript']]"
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['jump']]"
