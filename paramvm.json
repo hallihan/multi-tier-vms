@@ -55,12 +55,23 @@
             "type": "string",
             "defaultValue": ""
         },
-        "enable_enhanced_networking":{
+        "loadbalancer_id_or_empty": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "enable_enhanced_networking": {
             "type": "bool",
             "defaultValue": true
         }
     },
     "variables": {
+        "loadbalancer_if_empty": [],
+        "loadbalancer_if_not_empty": [
+            { 
+                "id": "[parameters('loadbalancer_id_or_empty')]"
+                }
+        ],
+        "loadbalancer": "[if(equals(parameters('loadbalancer_id_or_empty'),''),variables('loadbalancer_if_empty'),variables('loadbalancer_if_not_empty'))]"
     },
     "resources": [
         {
@@ -168,6 +179,7 @@
                             "subnet": {
                                 "id": "[resourceId(parameters('vnet_resource_group'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'),  parameters('vnet_subnet_name'))]"
                             },
+                            "applicationGatewayBackendAddressPools": "[variables('loadbalancer')]",
                             "primary": true,
                             "privateIPAddressVersion": "IPv4"
                         }
@@ -196,6 +208,7 @@
                             "subnet": {
                                 "id": "[resourceId(parameters('vnet_resource_group'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'),  parameters('vnet_subnet_name'))]"
                             },
+                            "applicationGatewayBackendAddressPools": "[variables('loadbalancer')]",
                             "primary": true,
                             "privateIPAddressVersion": "IPv4",
                             "publicIPAddress": {
