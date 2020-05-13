@@ -374,7 +374,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(deployment().properties.templateLink.uri, 'apploadbalace.json')]"
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'apploadbalance.json')]"
                 },
                 "parameters": {
                     "location": {
