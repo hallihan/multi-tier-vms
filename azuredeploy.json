@@ -479,12 +479,6 @@
                     },
                     "vnet_subnet_name": {
                         "value": "AppGatewaySubnet"
-                    },
-                    "backend_vm_name_base": {
-                        "value": "[parameters('Compute VM Name Base')]"
-                    },
-                    "backend_vm_count": {
-                        "value": "[parameters('Compute VM Count')]"
                     }
                 }
             }
