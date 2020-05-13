@@ -362,7 +362,8 @@
 
                 ]
             }
-        },        {
+        },
+        {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2019-12-01",
             "name": "bastionNSG",
@@ -541,7 +542,11 @@
                         "value": ""
                     },
                     "loadbalancer_id_or_empty": {
-                        "value": "[concat(resourceId('Microsoft.Network/applicationGateways',concat(parameters('Compute VM Name Base'),'-loadbalancer')),'/backendPools/default-backend')]"
+                        "value": [
+                            {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways',concat(parameters('Compute VM Name Base'),'-loadbalancer')),'/backendPools/default-backend')]"
+                            }
+                        ]
                     }
                 }
             },

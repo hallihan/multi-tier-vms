@@ -172,7 +172,7 @@
                             "subnet": {
                                 "id": "[resourceId(parameters('vnet_resource_group'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnet_name'),  parameters('vnet_subnet_name'))]"
                             },
-                            "applicationGatewayBackendAddressPools": [ "[if(equals(parameters('loadbalancer_id_or_empty'),''),'', concat('{ \"id\": \"',parameters('loadbalancer_id_or_empty'),'\" }'))]" ],
+                            "applicationGatewayBackendAddressPools": "[if(equals(parameters('loadbalancer_id_or_empty'),''),'[]',parameters('loadbalancer_id_or_empty'))]",
                             "primary": true,
                             "privateIPAddressVersion": "IPv4"
                         }
