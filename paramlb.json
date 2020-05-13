@@ -123,7 +123,7 @@
                                 "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('lb_name')), '/httpListeners/http-listener')]"
                             },
                             "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('lb_name')), '/backendAddressPools/compute-backend')]"
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('lb_name')), '/backendAddressPools/default-backend')]"
                             },
                             "backendHttpSettings": {
                                 "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('lb_name')), '/backendHttpSettingsCollection/http-setting')]"
