@@ -211,25 +211,25 @@
         },
         "postInstallActions": {
             "compute": {
-                "commandToExecute": "[concat('sh ',variables('osProfile')['SL12']['diskscript'],'; sh ExamplePostInstall1.sh')]",
+                "commandToExecute": "[concat('sh ',variables('osProfile')['SL12']['diskscript'],'; sh ExamplePostInstall1.sh; sh ExamplePostInstall2.sh')]",
                 "fileUris": [
                     "[uri(deployment().properties.templateLink.uri, variables('osProfile')['SL12']['diskscript'])]",
-                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]"
+                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]",
+                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall2.sh')]"
                 ]
             },
             "midtier": {
-                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh ExamplePostInstall2.sh')]",
+                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh ExamplePostInstall1.sh')]",
                 "fileUris": [
                     "[uri(deployment().properties.templateLink.uri, variables('osProfile')['RH7x']['diskscript'])]",
-                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall2.sh')]"
+                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]"
                 ]
             },
             "metadata": {
-                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh ExamplePostInstall1.sh; sh ExamplePostInstall2.sh')]",
+                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh ExamplePostInstall1.sh')]",
                 "fileUris": [
                     "[uri(deployment().properties.templateLink.uri, variables('osProfile')['RH7x']['diskscript'])]",
-                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]",
-                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall2.sh')]"
+                    "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]"
                 ]
             },
             "jump": {
@@ -454,7 +454,6 @@
             "dependsOn": [
                 "ParameterizedComputeVM-Copy",
                 "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-loadbalancer'))]"
-
             ],
             "properties": {
                 "mode": "Incremental",
