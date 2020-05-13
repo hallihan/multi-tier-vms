@@ -541,7 +541,7 @@
                         "value": ""
                     },
                     "loadbalancer_id_or_empty": {
-                        "value": "[resourceId('Microsoft.Network/applicationGateways','compute-loadbalancer','backendPools','compute-backend')]"
+                        "value": "[concat(resourceId('Microsoft.Network/applicationGateways',concat(parameters('Compute VM Name Base'),'-loadbalancer')),'/backendPools/default-backend')]"
                     }
                 }
             },
