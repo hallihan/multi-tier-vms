@@ -323,6 +323,48 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2019-12-01",
+            "name": "appgatewayNSG",
+            "condition": "[equals(parameters('Use a New or Existing Virtual Network?'), 'New')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+            ],
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "allow_http_from_ip_or_range",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "[parameters('Allow management from IP or CIDR block')]",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 500,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "allow_management_from_gateway_manager",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "65200-65535",
+                            "sourceAddressPrefix": "GatewayManager",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 501,
+                            "direction": "Inbound"
+                        }
+                    }
+
+                ]
+            }
+        },        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2019-12-01",
             "name": "bastionNSG",
             "condition": "[equals(parameters('Use a New or Existing Virtual Network?'), 'New')]",
             "dependsOn": [
@@ -744,7 +786,7 @@
                         "properties": {
                             "addressPrefix": "10.2.0.128/27",
                             "networkSecurityGroup": {
-                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'bastionNSG')]"
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'appgatewayNSG')]"
                             }
                         }
                     },
