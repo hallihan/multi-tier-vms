@@ -28,14 +28,6 @@
         "vnet_subnet_name": {
             "defaultValue": "default",
             "type": "String"
-        },
-        "backend_vm_name_base":{
-            "defaultValue": "compute",
-            "type": "String"
-        },
-        "backend_vm_count": {
-            "type": "int",
-            "defaultValue":1
         }
     },
     "variables": {
@@ -86,13 +78,8 @@
                         "properties": {
                             "backendAddresses": [
                             ],
-                            "copy": [ {
-                                "name": "backendIPConfigurations",
-                                "count": "[parameters('backend_vm_count')]",
-                                "input": {
-                                    "id": "[resourceId('Microsoft.Network/networkInterfaces/ipConfigurations',concat(parameters('backend_vm_name_base'),'-',copyIndex('backendIPConfigurations'),'_nic'),'ipconfig1')]"
-                                }
-                            } ]
+                            "backendIPConfigurations": [
+                            ]
                         }
                     }
                 ],

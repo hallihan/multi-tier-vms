@@ -452,8 +452,9 @@
             "apiVersion": "2019-10-01",
             "name": "ParameterizedAppGateway",
             "dependsOn": [
-                "ParameterizedComputeVM-Copy",
-                "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-loadbalancer'))]"
+                "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-loadbalancer'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]",
+                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -494,7 +495,8 @@
             "name": "[concat('ParameterizedComputeVM-', copyIndex())]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]",
-                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]"
+                "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]",
+                "[resourceId('Microsoft.Resources/deployments', 'ParameterizedAppGateway')]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -543,6 +545,9 @@
                     },
                     "public_ip_or_empty": {
                         "value": ""
+                    },
+                    "loadbalancer_id_or_empty": {
+                        "value": "[resourceId('Microsoft.Network/applicationGateways','compute-loadbalancer','backendPools','compute-backend')]"
                     }
                 }
             },
@@ -606,6 +611,9 @@
                     },
                     "public_ip_or_empty": {
                         "value": ""
+                    },
+                    "loadbalancer_id_or_empty": {
+                        "value": ""
                     }
                 }
             },
@@ -668,6 +676,9 @@
                         "value": true
                     },
                     "public_ip_or_empty": {
+                        "value": ""
+                    },
+                    "loadbalancer_id_or_empty": {
                         "value": ""
                     }
                 }
@@ -733,6 +744,9 @@
                     },
                     "public_ip_or_empty": {
                         "value": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]"
+                    },
+                    "loadbalancer_id_or_empty": {
+                        "value": ""
                     }
                 }
             }
