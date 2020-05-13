@@ -90,7 +90,7 @@
                                 "name": "backendIPConfigurations",
                                 "count": "[parameters('backend_vm_count')]",
                                 "input": {
-                                    "id": "[resourceId('Microsoft.Network/networkInterfaces/ipConfigurations',concat(parameters('backend_vm_name_base'),'-',copyIndex(),'_nic'),'ipconfig1')]"
+                                    "id": "[resourceId('Microsoft.Network/networkInterfaces/ipConfigurations',concat(parameters('backend_vm_name_base'),'-',copyIndex('backendIPConfigurations'),'_nic'),'ipconfig1')]"
                                 }
                             } ]
                         }
