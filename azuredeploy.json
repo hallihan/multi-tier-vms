@@ -24,6 +24,14 @@
             "defaultValue": "multitiervnet",
             "type": "String"
         },
+        "Operating System Image": {
+            "type":"string",
+            "defaultValue": "Red Hat Enterprise Linux 7 (latest, LVM)",
+            "allowedValues": [
+                "Red Hat Enterprise Linux 7 (latest, LVM)",
+                "SUSE Enterprise Linux 12 SP5 +Patching"
+            ]
+        },
         "Mid-Tier VM Name Base": {
             "defaultValue": "midtier",
             "type": "String"
@@ -189,6 +197,7 @@
                 "diskcount": 6
             }
         },
+        "ostag":"[if(equals(parameters('Operating System Image'),'Red Hat Enterprise Linux 7 (latest, LVM)'),'RH7x','SL12')]",
         "osProfile": {
             "RH7x": {
                 "image": {
@@ -211,31 +220,31 @@
         },
         "postInstallActions": {
             "compute": {
-                "commandToExecute": "[concat('sh ',variables('osProfile')['SL12']['diskscript'],'; sh ExamplePostInstall1.sh; sh ExamplePostInstall2.sh')]",
+                "commandToExecute": "[concat('sh ',variables('osProfile')[variables('ostag')]['diskscript'],'; sh ExamplePostInstall1.sh; sh ExamplePostInstall2.sh')]",
                 "fileUris": [
-                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')['SL12']['diskscript'])]",
+                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')[variables('ostag')]['diskscript'])]",
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]",
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall2.sh')]"
                 ]
             },
             "midtier": {
-                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh ExamplePostInstall1.sh')]",
+                "commandToExecute": "[concat('sh ',variables('osProfile')[variables('ostag')]['diskscript'],'; sh ExamplePostInstall1.sh')]",
                 "fileUris": [
-                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')['RH7x']['diskscript'])]",
+                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')[variables('ostag')]['diskscript'])]",
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]"
                 ]
             },
             "metadata": {
-                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh ExamplePostInstall1.sh')]",
+                "commandToExecute": "[concat('sh ',variables('osProfile')[variables('ostag')]['diskscript'],'; sh ExamplePostInstall1.sh')]",
                 "fileUris": [
-                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')['RH7x']['diskscript'])]",
+                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')[variables('ostag')]['diskscript'])]",
                     "[uri(deployment().properties.templateLink.uri, 'ExamplePostInstall1.sh')]"
                 ]
             },
             "jump": {
-                "commandToExecute": "[concat('sh ',variables('osProfile')['RH7x']['diskscript'],'; sh SetupJump.sh')]",
+                "commandToExecute": "[concat('sh ',variables('osProfile')[variables('ostag')]['diskscript'],'; sh SetupJump.sh')]",
                 "fileUris": [
-                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')['RH7x']['diskscript'])]",
+                    "[uri(deployment().properties.templateLink.uri, variables('osProfile')[variables('ostag')]['diskscript'])]",
                     "[uri(deployment().properties.templateLink.uri, 'SetupJump.sh')]"
                 ]
             }
@@ -530,7 +539,7 @@
                         "value": "computeSubnet"
                     },
                     "os_image": {
-                        "value": "[variables('osProfile')['SL12']['image']]"
+                        "value": "[variables('osProfile')[variables('ostag')]['image']]"
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['compute']]"
@@ -542,7 +551,7 @@
                         "value": ""
                     },
                     "loadbalancer_id_or_empty": {
-                        "value":"[concat(resourceId('Microsoft.Network/applicationGateways',concat(parameters('Compute VM Name Base'),'-loadbalancer')),'/backendAddressPools/default-backend')]"
+                        "value": "[concat(resourceId('Microsoft.Network/applicationGateways',concat(parameters('Compute VM Name Base'),'-loadbalancer')),'/backendAddressPools/default-backend')]"
                     }
                 }
             },
@@ -596,7 +605,7 @@
                         "value": "metadataSubnet"
                     },
                     "os_image": {
-                        "value": "[variables('osProfile')['RH7x']['image']]"
+                        "value": "[variables('osProfile')[variables('ostag')]['image']]"
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['metadata']]"
@@ -662,7 +671,7 @@
                         "value": "midtierSubnet"
                     },
                     "os_image": {
-                        "value": "[variables('osProfile')['RH7x']['image']]"
+                        "value": "[variables('osProfile')[variables('ostag')]['image']]"
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['midtier']]"
@@ -729,7 +738,7 @@
                         "value": "jumpSubnet"
                     },
                     "os_image": {
-                        "value": "[variables('osProfile')['RH7x']['image']]"
+                        "value": "[variables('osProfile')[variables('ostag')]['image']]"
                     },
                     "post_install_actions": {
                         "value": "[variables('postInstallActions')['jump']]"
