@@ -250,15 +250,6 @@
             }
         }
     },
-    "outputs": {
-        "computeIp": {
-            "type": "array",
-            "copy": {
-                "count": "[parameters('Compute VM Count')]",
-                "input": "[reference(concat('ParameterizedComputeVM-', copyIndex())).privateIp]"
-            }
-        }
-    },
     "resources": [
         {
             "apiVersion": "2019-07-01",
