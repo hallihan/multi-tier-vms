@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-10-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "Use a New or Existing Virtual Network?": {
@@ -508,7 +508,7 @@
                     "scope": "inner"
                 },
                 "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2019-10-01/deploymentTemplate.json#",
+                    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "resources": [
                         {
