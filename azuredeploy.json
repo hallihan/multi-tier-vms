@@ -507,39 +507,71 @@
                 "expressionEvaluationOptions": {
                     "scope": "inner"
                 },
+                "parameters": {
+                    "Compute VM Template": {
+                        "value": "[parameters('Compute VM Template')]"
+                    },
+                    "Compute VM Name Base": {
+                        "value": "[parameters('Compute VM Name Base')]"
+                    },
+                    "Proximity PlacementGroup Name": {
+                        "value": "[parameters('Proximity PlacementGroup Name')]"
+                    },
+                    "ssh Key for VM Access": {
+                        "value": "[parameters('ssh Key for VM Access')]"
+                    },
+                    "Virtual Network Name": {
+                        "value": "[parameters('Virtual Network Name')]"
+                    },
+                    "storageProfileAdvanced": {
+                        "value": "[variables('storageProfileAdvanced')]"
+                    },
+                    "vnet_resource_group_name": {
+                        "value": "[variables('vnet_resource_group_name')]"
+                    },
+                    "osProfile": {
+                        "value": "[variables('osProfile')]"
+                    },
+                    "ostag": {
+                        "value": "[variables('ostag')]"
+                    },
+                    "postInstallActions": {
+                        "value": "[variables('postInstallActions')]"
+                    }
+                },
                 "template": {
                     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {
                         "Compute VM Template": {
-                            "value": "[parameters('Compute VM Template')]",
+                            "type": "object"
                         },
                         "Compute VM Name Base": {
-                            "value": "[parameters('Compute VM Name Base')]"
+                            "type": "string"
                         },
                         "Proximity PlacementGroup Name": {
-                            "value": "[parameters('Proximity PlacementGroup Name')]"
+                            "type": "string"
                         },
                         "ssh Key for VM Access": {
-                            "value": "[parameters('ssh Key for VM Access')]"
+                            "type": "string"
                         },
                         "Virtual Network Name": {
-                            "value": "[parameters('Virtual Network Name')]"
+                            "type": "string"
                         },
                         "storageProfileAdvanced": {
-                            "value": "[variables('storageProfileAdvanced')]"
+                            "type": "object"
                         },
                         "vnet_resource_group_name": {
-                            "value": "[variables('vnet_resource_group_name')]"
+                            "type": "string"
                         },
                         "osProfile": {
-                            "value": "[variables('osProfile')]"
+                            "type": "object"
                         },
                         "ostag": {
-                            "value": "[variables('ostag')]"
+                            "type": "string"
                         },
                         "postInstallActions": {
-                            "value": "[variables('postInstallActions')]"
+                            "type": "object"
                         }
                     },
                     "resources": [
