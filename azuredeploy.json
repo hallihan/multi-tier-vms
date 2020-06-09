@@ -514,6 +514,9 @@
                     "Compute VM Name Base": {
                         "value": "[parameters('Compute VM Name Base')]"
                     },
+                    "Compute VM Count": {
+                        "value": "[parameters('Compute VM Count')]"
+                    },
                     "Proximity PlacementGroup Name": {
                         "value": "[parameters('Proximity PlacementGroup Name')]"
                     },
@@ -548,6 +551,9 @@
                         },
                         "Compute VM Name Base": {
                             "type": "string"
+                        },
+                        "Compute VM Count": {
+                            "type": "int"
                         },
                         "Proximity PlacementGroup Name": {
                             "type": "string"
