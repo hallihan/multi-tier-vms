@@ -505,11 +505,43 @@
             "properties": {
                 "mode": "Incremental",
                 "expressionEvaluationOptions": {
-                    "scope": "outer"
+                    "scope": "inner"
                 },
                 "template": {
                     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "Compute VM Template": {
+                            "value": "[parameters('Compute VM Template')]",
+                        },
+                        "Compute VM Name Base": {
+                            "value": "[parameters('Compute VM Name Base')]"
+                        },
+                        "Proximity PlacementGroup Name": {
+                            "value": "[parameters('Proximity PlacementGroup Name')]"
+                        },
+                        "ssh Key for VM Access": {
+                            "value": "[parameters('ssh Key for VM Access')]"
+                        },
+                        "Virtual Network Name": {
+                            "value": "[parameters('Virtual Network Name')]"
+                        },
+                        "storageProfileAdvanced": {
+                            "value": "[variables('storageProfileAdvanced')]"
+                        },
+                        "vnet_resource_group_name": {
+                            "value": "[variables('vnet_resource_group_name')]"
+                        },
+                        "osProfile": {
+                            "value": "[variables('osProfile')]"
+                        },
+                        "ostag": {
+                            "value": "[variables('ostag')]"
+                        },
+                        "postInstallActions": {
+                            "value": "[variables('postInstallActions')]"
+                        }
+                    },
                     "resources": [
                         {
                             "type": "Microsoft.Resources/deployments",
@@ -528,13 +560,13 @@
                                         "value": "[concat(parameters('Compute VM Name Base'),'-', copyIndex())]"
                                     },
                                     "vm_size": {
-                                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['vmsize']]"
+                                        "value": "[parameters('storageProfileAdvanced')[parameters('Compute VM Template')]['vmsize']]"
                                     },
                                     "datadisk_size": {
-                                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['disksize']]"
+                                        "value": "[parameters('storageProfileAdvanced')[parameters('Compute VM Template')]['disksize']]"
                                     },
                                     "datadisk_count": {
-                                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['diskcount']]"
+                                        "value": "[parameters('storageProfileAdvanced')[parameters('Compute VM Template')]['diskcount']]"
                                     },
                                     "proximity_group_name": {
                                         "value": "[parameters('Proximity PlacementGroup Name')]"
@@ -546,16 +578,16 @@
                                         "value": "[parameters('Virtual Network Name')]"
                                     },
                                     "vnet_resource_group": {
-                                        "value": "[variables('vnet_resource_group_name')]"
+                                        "value": "[parameters('vnet_resource_group_name')]"
                                     },
                                     "vnet_subnet_name": {
                                         "value": "computeSubnet"
                                     },
                                     "os_image": {
-                                        "value": "[variables('osProfile')[variables('ostag')]['image']]"
+                                        "value": "[parameters('osProfile')[parameters('ostag')]['image']]"
                                     },
                                     "post_install_actions": {
-                                        "value": "[variables('postInstallActions')['compute']]"
+                                        "value": "[parameters('postInstallActions')['compute']]"
                                     },
                                     "enable_enhanced_networking": {
                                         "value": true
