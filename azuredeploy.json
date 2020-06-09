@@ -845,7 +845,7 @@
                     },
                     "post_install_actions": {
                         "value": {
-                            "commandToExecute": "[concat(variables('postInstallActions')['jump'].commandToExecute,' \"', reference('ParameterizedComputeVM-Loop').outputs.computeIp.value,'\"')]",
+                            "commandToExecute": "[concat(variables('postInstallActions')['jump'].commandToExecute, string(reference('ParameterizedComputeVM-Loop').outputs.computeIp.value))]",
                             "fileUris": "[variables('postInstallActions')['jump'].fileUris]"
                         }
                     },
