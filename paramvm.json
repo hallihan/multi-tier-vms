@@ -225,6 +225,11 @@
                 "enableIPForwarding": false
             }
         }
-
-    ]
+    ],
+    "outputs": {
+        "privateIp":{
+            "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', if(equals(parameters('public_ip_or_empty'), ''),concat(parameters('vm_name'), '_nic'),concat(parameters('vm_name'), '_nic_pip')))).ipConfigurations[0].properties.privateIPAddress]",
+            "type": "string"
+        }
+    }
 }

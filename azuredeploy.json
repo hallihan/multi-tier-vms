@@ -25,7 +25,7 @@
             "type": "String"
         },
         "Operating System Image": {
-            "type":"string",
+            "type": "string",
             "defaultValue": "Red Hat Enterprise Linux 7 (latest, LVM)",
             "allowedValues": [
                 "Red Hat Enterprise Linux 7 (latest, LVM)",
@@ -197,7 +197,7 @@
                 "diskcount": 6
             }
         },
-        "ostag":"[if(equals(parameters('Operating System Image'),'Red Hat Enterprise Linux 7 (latest, LVM)'),'RH7x','SL12')]",
+        "ostag": "[if(equals(parameters('Operating System Image'),'Red Hat Enterprise Linux 7 (latest, LVM)'),'RH7x','SL12')]",
         "osProfile": {
             "RH7x": {
                 "image": {
@@ -247,6 +247,15 @@
                     "[uri(deployment().properties.templateLink.uri, variables('osProfile')[variables('ostag')]['diskscript'])]",
                     "[uri(deployment().properties.templateLink.uri, 'SetupJump.sh')]"
                 ]
+            }
+        }
+    },
+    "outputs": {
+        "computeIp": {
+            "type": "array",
+            "copy": {
+                "count": "[parameters('Compute VM Count')]",
+                "input": "[reference(concat('ParameterizedComputeVM-', copyIndex())).privateIp]"
             }
         }
     },
@@ -496,7 +505,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "name": "[concat('ParameterizedComputeVM-', copyIndex())]",
+            "name": "ParameterizedComputeVM-Loop",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]",
                 "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]",
@@ -504,60 +513,85 @@
             ],
             "properties": {
                 "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(deployment().properties.templateLink.uri, 'paramvm.json')]"
+                "expressionEvaluationOptions": {
+                    "scope": "outer"
                 },
-                "parameters": {
-                    "location": {
-                        "value": "[resourceGroup().location]"
-                    },
-                    "vm_name": {
-                        "value": "[concat(parameters('Compute VM Name Base'),'-', copyIndex())]"
-                    },
-                    "vm_size": {
-                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['vmsize']]"
-                    },
-                    "datadisk_size": {
-                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['disksize']]"
-                    },
-                    "datadisk_count": {
-                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['diskcount']]"
-                    },
-                    "proximity_group_name": {
-                        "value": "[parameters('Proximity PlacementGroup Name')]"
-                    },
-                    "ssh_pub_key": {
-                        "value": "[parameters('ssh Key for VM Access')]"
-                    },
-                    "vnet_name": {
-                        "value": "[parameters('Virtual Network Name')]"
-                    },
-                    "vnet_resource_group": {
-                        "value": "[variables('vnet_resource_group_name')]"
-                    },
-                    "vnet_subnet_name": {
-                        "value": "computeSubnet"
-                    },
-                    "os_image": {
-                        "value": "[variables('osProfile')[variables('ostag')]['image']]"
-                    },
-                    "post_install_actions": {
-                        "value": "[variables('postInstallActions')['compute']]"
-                    },
-                    "enable_enhanced_networking": {
-                        "value": true
-                    },
-                    "public_ip_or_empty": {
-                        "value": ""
-                    },
-                    "loadbalancer_id_or_empty": {
-                        "value": "[concat(resourceId('Microsoft.Network/applicationGateways',concat(parameters('Compute VM Name Base'),'-loadbalancer')),'/backendAddressPools/default-backend')]"
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-10-01/deploymentTemplate.json#",
+                    "resources": [
+                        {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2019-10-01",
+                            "name": "[concat('ParameterizedComputeVM-', copyIndex())]",
+                            "properties": {
+                                "mode": "Incremental",
+                                "templateLink": {
+                                    "uri": "[uri(deployment().properties.templateLink.uri, 'paramvm.json')]"
+                                },
+                                "parameters": {
+                                    "location": {
+                                        "value": "[resourceGroup().location]"
+                                    },
+                                    "vm_name": {
+                                        "value": "[concat(parameters('Compute VM Name Base'),'-', copyIndex())]"
+                                    },
+                                    "vm_size": {
+                                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['vmsize']]"
+                                    },
+                                    "datadisk_size": {
+                                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['disksize']]"
+                                    },
+                                    "datadisk_count": {
+                                        "value": "[variables('storageProfileAdvanced')[parameters('Compute VM Template')]['diskcount']]"
+                                    },
+                                    "proximity_group_name": {
+                                        "value": "[parameters('Proximity PlacementGroup Name')]"
+                                    },
+                                    "ssh_pub_key": {
+                                        "value": "[parameters('ssh Key for VM Access')]"
+                                    },
+                                    "vnet_name": {
+                                        "value": "[parameters('Virtual Network Name')]"
+                                    },
+                                    "vnet_resource_group": {
+                                        "value": "[variables('vnet_resource_group_name')]"
+                                    },
+                                    "vnet_subnet_name": {
+                                        "value": "computeSubnet"
+                                    },
+                                    "os_image": {
+                                        "value": "[variables('osProfile')[variables('ostag')]['image']]"
+                                    },
+                                    "post_install_actions": {
+                                        "value": "[variables('postInstallActions')['compute']]"
+                                    },
+                                    "enable_enhanced_networking": {
+                                        "value": true
+                                    },
+                                    "public_ip_or_empty": {
+                                        "value": ""
+                                    },
+                                    "loadbalancer_id_or_empty": {
+                                        "value": "[concat(resourceId('Microsoft.Network/applicationGateways',concat(parameters('Compute VM Name Base'),'-loadbalancer')),'/backendAddressPools/default-backend')]"
+                                    }
+                                }
+                            },
+                            "copy": {
+                                "name": "ParameterizedComputeVM-Copy",
+                                "count": "[parameters('Compute VM Count')]"
+                            }
+                        }
+                    ],
+                    "outputs": {
+                        "computeIp": {
+                            "type": "array",
+                            "copy": {
+                                "count": "[parameters('Compute VM Count')]",
+                                "input": "[reference(concat('ParameterizedComputeVM-', copyIndex())).outputs.privateIp.value]"
+                            }
+                        }
                     }
                 }
-            },
-            "copy": {
-                "name": "ParameterizedComputeVM-Copy",
-                "count": "[parameters('Compute VM Count')]"
             }
         },
         {
@@ -699,7 +733,8 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks', parameters('Virtual Network Name'))]",
                 "[resourceId('Microsoft.Compute/proximityPlacementGroups', parameters('Proximity PlacementGroup Name'))]",
-                "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]"
+                "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Virtual Network Name'),'-ip-jump'))]",
+                "ParameterizedComputeVM-Loop"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -741,7 +776,10 @@
                         "value": "[variables('osProfile')[variables('ostag')]['image']]"
                     },
                     "post_install_actions": {
-                        "value": "[variables('postInstallActions')['jump']]"
+                        "value": {
+                            "commandToExecute": "[concat(variables('postInstallActions')['jump'].commandToExecute,' \"', reference('ParameterizedComputeVM-Loop').outputs.computeIp.value,'\"')]",
+                            "fileUris": "[variables('postInstallActions')['jump'].fileUris]"
+                        }
                     },
                     "enable_enhanced_networking": {
                         "value": false
