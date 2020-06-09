@@ -587,7 +587,7 @@
                             "type": "array",
                             "copy": {
                                 "count": "[parameters('Compute VM Count')]",
-                                "input": "[reference(concat('ParameterizedComputeVM-', copyIndex())).outputs.privateIp.value]"
+                                "input": "[reference(concat('ParameterizedComputeVM-Loop/ParameterizedComputeVM-', copyIndex())).outputs.privateIp.value]"
                             }
                         }
                     }
