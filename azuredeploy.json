@@ -544,7 +544,7 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {
                         "Compute VM Template": {
-                            "type": "object"
+                            "type": "string"
                         },
                         "Compute VM Name Base": {
                             "type": "string"
